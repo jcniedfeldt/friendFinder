@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
+
+    <title>Friend Finder</title>
+</head>
+<!-- Page Title -->
+<div class="container">
+    <h1>Survey</h1>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form id="survey" method="post" action="/api/friends">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Name</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="John Smith" aria-label="name" aria-describedby="basic-addon1"
+                        id="name">
+                </div>
+                <!-- <label for="photo">Image</label> -->
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">Picture URL</span>
+                    </div>
+                    <input type="text" class="form-control" id="image-url" aria-describedby="basic-addon3" placeholder="www.site.com/profile-pic.jpg">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="matchModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Your New Best Friend!!!!</h5><br>
+                    <h5 class="modal-title">Difference: <span id="diff"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6" id="yourInfo">
+
+                            </div>
+                            <div class="col-md-6" id="bestFriendInfo">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<body>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i"
+        crossorigin="anonymous"></script> -->
+    <!-- <script src="https://malsup.github.com/jquery.form.js"></script>  -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+    <script>
+        let questions = [{
+            question: "How do you prefer to relax?",
+            ansDescription: { 1: "With others",3:"It depends.", 5: "By myself" }
+        },
+        {
+            question: "Do you like people or things more?",
+            ansDescription: { 1: "People",3:"Everything is interesting", 5: "Things" }
+        },
+        {
+            question: "Do you prefer to be outside or inside?",
+            ansDescription: { 1: "Outside", 5: "Inside" }
+        },
+        {
+            question: "Are you religious or non-religious?",
+            ansDescription: { 1: "Religious",3:"Ambivalent", 5: "Non-religious" }
+        },
+        {
+            question: "Are you type A or type B?",
+            ansDescription: { 1: "Type A",3:"What's that?", 5: "Type B" }
+        },
+        {
+            question: "Do you like pets?",
+            ansDescription: { 1: "Pets are the best!",3:"Depends on the Pet", 5: "I hate pets." }
+        },
+        {
+            question: "Do you consider yourself a hipster?",
+            ansDescription: { 1: "Yes",3:"Don't Care", 5: "No" }
+        },
+        {
+            question: "Political Affiliation? Republican or Democrat?",
+            ansDescription: { 1: "Republican", 3: "Other/Independent", 5: "Democrat" }
+        },
+        {
+            question: "Do you consider yourself sexually adventurous?",
+            ansDescription: { 1: "I'm Vanilla",3:"WHY ARE YOU ASKING ME THIS QUESTION?!?!?!", 5: "I'm adventurous" }
+        },
+        {
+            question: "Fantasy or Sci-fi?",
+            ansDescription: { 1: "Fantasy!", 3: "I don't care.", 5: "Sci Fi!" }
+        },
+        ];
+
+        // for each of the questions, create the necessary structure
+        function createQuestionHTML(questionObj, id) {
+            // let obj2ret = $(`<div class="form-group"><label for="${id}">${questionObj.question}</label><input type="range" class="custom-range question" min="1" max="5" step="1" value="3" id="${id}"></div>`);
+            let optionStr = "";
+            for (let i = 1; i < 6; i++) {
+                let description = "";
+                if (i in questionObj.ansDescription) {
+                    description = ": " + questionObj.ansDescription[i];
+                }
+                if (i == 3) {
+                    optionStr += `<option selected value="${i}">${i}${description}</option>`;
+                } else {
+                    optionStr += `<option value=${i}>${i}${description}</option>`;
+
+                }
+
+            }
+            let obj2ret = $(`<label class="mr-sm-2" for="inlineFormCustomSelect">${questionObj.question}</label><select class="custom-select mr-sm-2 question" id="inlineFormCustomSelect">${optionStr}
+      </select>`);
+            // add in display field for current value selected
+            // console.log(obj2ret);
+            return obj2ret;
+        }
+        function writeQuestions2HTML() {
+            // $("#survey").empty();
+            let idcounter = 0;
+            questions.forEach(questionObj => {
+                let questionhtml = createQuestionHTML(questionObj, `question${idcounter++}`);
+                $("#survey").append(questionhtml);
+            });
+            // Add submit button
+            submitButton = $(`<button type="submit" class="btn btn-primary submit">Submit</button>`);
+            $("#survey").append(submitButton);
+        };
+
+        function genHTMLinfo(friendObj){
+            return $(`<div class="card"><div class="card-header"><h1>${friendObj.name}</h1></div><div class="card-body"><img style="width:100%;" src="${friendObj.photo}" alt="${friendObj.photo}"></div></div>`);
+        }
+
+        // $('#survey').on('submit', function (e) {
+        //     console.log("In Func.")
+        //     e.preventDefault(); // prevent native submit
+        //     $(this).ajaxForm({
+        //         url: 'api/find-friend', // or whatever
+        //         dataType: 'json',
+        //         success: function (response) {
+        //             console.log("The server says: " + response);
+        //         },
+        //         error: function(error){
+        //             console.log("Error: " + error);
+        //         }
+        //     })
+        // });
+        // $("#survey").ajaxSubmit({
+        //     url: '/api/friends',
+        //     dataType: 'json',
+        //     success: function (response) {
+        //         console.log(response);
+        //     }
+        // })
+
+        writeQuestions2HTML();
+
+        // $(document).ready(function () {
+        $(".submit").on("click", function (event) {
+            event.preventDefault();
+
+            scores = [];
+            $(".question").each((index,obj) => {
+                // console.log(obj);
+                let val = parseInt($(obj).children("option:selected").val());
+                // let val=$(this).val().trim();
+                // let val = $(this).val();
+                // console.log(val);
+                scores.push(val);
+            })
+            // Here we grab the form elements
+            var info = {
+                name: $("#name").val().trim(),
+                photo: $("#image-url").val().trim(),
+                scores: scores
+            };
+
+            // console.log(info);
+
+            // This line is the magic. It"s very similar to the standard ajax function we used.
+            // Essentially we give it a URL, we give it the object we want to send, then we have a "callback".
+            // The callback is the response of the server. In our case, we set up code in api-routes that "returns" true or false
+            // depending on if a tables is available or not.
+
+            $.post("/api/friends", info,
+                function (data) {
+                    // console.log(data);
+                    $("#yourInfo").html(genHTMLinfo(info));
+                    $("#bestFriendInfo").html(genHTMLinfo(data.bestFriend));
+                    $("#diff").html(data.diff);
+
+                    $('#matchModal').modal('show')
+                    // If a table is available... tell user they are booked.
+                    // if (data) {
+                    //     alert("Yay! You are officially booked!");
+                    // }
+
+                    // // If a table is available... tell user they on the waiting list.
+                    // else {
+                    //     alert("Sorry you are on the wait list");
+                    // }
+
+                    // TODO Clear the form when submitting
+                    // $("#reserve-name").val("");
+                    // $("#reserve-phone").val("");
+                    // $("#reserve-email").val("");
+                    // $("#reserve-unique-id").val("");
+
+                });
+
+        })
+        // });
+
+    </script>
+</body>
+
+</html>

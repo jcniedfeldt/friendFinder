@@ -1,0 +1,27 @@
+{
+  "name": "friend-finder",
+  "version": "1.0.0",
+  "description": "Find a friend with similar interests using an online survey.",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcniedfeldt/friendFinder.git"
+  },
+  "keywords": [
+    "friend",
+    "finder"
+  ],
+  "author": "John C Niedfeldt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jcniedfeldt/friendFinder/issues"
+  },
+  "homepage": "https://github.com/jcniedfeldt/friendFinder#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "path":"^0.12.7"
+  }
+}
